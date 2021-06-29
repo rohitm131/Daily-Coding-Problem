@@ -1,0 +1,129 @@
+Given an array of integers, return a new array such that each element at index i of the new array is the product of all the numbers in the original array except the one at i.
+
+For example, if our input was [1, 2, 3, 4, 5], the expected output would be [120, 60, 40, 30, 24]. If our input was [3, 2, 1], the expected output would be [2, 3, 6].
+
+Follow-up: what if you can't use division?
+
+LEETCODE 238
+
+NAIVE SOLUTION:
+//MY APPROACH
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        
+        int n = nums.length;
+        int[] prefix = new int[n];
+        int[] suffix = new int[n];
+        
+        prefix[0] = nums[0];
+        for(int i=1; i<n; i++) {
+            prefix[i] = prefix[i-1]*nums[i];
+        }
+        
+        suffix[n-1] = nums[n-1];
+        for(int i=n-2; i>=0; i--) {
+            suffix[i] = suffix[i+1]*nums[i];
+        }
+        
+        int[] product = new int[n];
+        product[0] = suffix[1];
+        product[n-1] = prefix[n-2];
+        
+        for(int i=1; i<n-1; i++) {
+            product[i] = prefix[i-1] * suffix[i+1];
+        }
+        return product;
+    }
+}
+
+EFFICIENT SOLUTION:
+//FROM GFG
+        // Base case
+        if (n == 1) {
+            System.out.print("0");
+            return;
+        }
+ 
+        int i, temp = 1;
+ 
+        /* Allocate memory for the product array */
+        int prod[] = new int[n];
+ 
+        /* Initialize the product array as 1 */
+        for (int j = 0; j < n; j++)
+            prod[j] = 1;
+ 
+        /* In this loop, temp variable contains product of
+           elements on left side excluding arr[i] */
+        for (i = 0; i < n; i++) {
+            prod[i] = temp;
+            temp *= arr[i];
+        }
+ 
+        /* Initialize temp to 1 for product on right side */
+        temp = 1;
+ 
+        /* In this loop, temp variable contains product of
+           elements on right side excluding arr[i] */
+        for (i = n - 1; i >= 0; i--) {
+            prod[i] *= temp;
+            temp *= arr[i];
+        }
+ 
+        /* print the constructed prod array */
+        for (i = 0; i < n; i++)
+            System.out.print(prod[i] + " ");
+ 
+        return;
+    }
+    
+    
+    MORE OPTIMISED APPROACH USING O(1) SPACE:
+    1. USING LOG PROPERTY
+    x = a * b * c * d
+log(x) = log(a * b * c * d)
+log(x) = log(a) + log(b) + log(c) + log(d)
+x = antilog(log(a) + log(b) + log(c) + log(d))
+
+antilog((log(a[0]) + log(a[1]) +
+ .. + log(a[n-1])) - log(a[i]))
+ 
+ 
+ // Java program for product array puzzle
+// with O(n) time and O(1) space.
+public class Array_puzzle_2 {
+ 
+    // epsilon value to maintain precision
+    static final double EPS = 1e-9;
+ 
+    static void productPuzzle(int a[], int n)
+    {
+        // to hold sum of all values
+        double sum = 0;
+        for (int i = 0; i < n; i++)
+            sum += Math.log10(a[i]);
+ 
+        // output product for each index
+        // anti log to find original product value
+        for (int i = 0; i < n; i++)
+            System.out.print(
+                (int)(EPS
+                      + Math.pow(
+                            10.00, sum
+                                       - Math.log10(a[i])))
+                + " ");
+    }
+ 
+    // Driver code
+    public static void main(String args[])
+    {
+        int a[] = { 10, 3, 5, 6, 2 };
+        int n = a.length;
+        System.out.println("The product array is: ");
+        productPuzzle(a, n);
+    }
+}
+// This code is contributed by Sumit Ghosh
+    
+
+
